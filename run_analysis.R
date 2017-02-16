@@ -1,4 +1,4 @@
-#Variable Configuration
+#Data Source
 url<-"https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 
 #Download the data files and extract the dataset files
@@ -25,17 +25,22 @@ x_train<-cbind(c(subject_train,activity_train),x_train)
 #Merging training and test datasets
 merged<-rbind(x_test,x_train)
 
-#Cleaning Columns names
-#features<-features[,2]
-features = gsub('-mean()', 'Mean', features[,2])
-features = gsub('-std()', 'Std', features)
-features <- gsub('[-()]', '', features)
-
-#Assign Columns names and convert activity to string label
-colnames(merged)<-append(c("subject","activity"),as.character(features))
+#Assign Columns names and convert activity to string label (** Solved Questions 1, and Question 3 **)
+colnames(merged)<-append(c("subject","activity"),as.character(features[,2]))
 merged[["activity"]] <- activities[ match(merged[['activity']], activities[['V1']] ) , 'V2']
 
-#(In this point is solved the Questions 1, and the data meets the questions 3 and 4)
+#Extract only desired columns (** Solved Question 2 **)
+extracted<-merged[,c("subject","activity",grep("mean[(]|std[(]", names(merged), value = TRUE))]
 
-extracted<-merged[,c("subject","activity",grep("Mean|Std", names(merged), value = TRUE))]
+#Format columns names (** Solved Question 4 **)
+names(extracted) <- gsub("[()][-]{0,1}", "", names(extracted))
+names(extracted) <- gsub("-std", "Std", names(extracted))
+names(extracted) <- gsub("-mean", "Mean", names(extracted))
 
+#Create a new tidy set with the means by subject and activity
+tidy<-extracted %>%
+    group_by(subject,activity) %>%
+    summarise_each(funs(mean(., na.rm=TRUE)))
+
+#Save the tidy set to txt file (** Solved Question 5 **)
+write.table(tidy, "tidy.txt", row.name=FALSE)
