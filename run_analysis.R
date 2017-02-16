@@ -2,9 +2,9 @@
 url<-"https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 
 #Download the data files and extract the dataset files
-download.file(url,"temp.zip",method="curl")
-unzip("temp.zip",exdir = "./")
-file.remove("temp.zip")
+#download.file(url,"temp.zip",method="curl")
+#unzip("temp.zip",exdir = "./")
+#∫file.reove("temp.zip")
 
 #read all the neccesary files
 features<-read.table("UCI HAR Dataset/features.txt")
