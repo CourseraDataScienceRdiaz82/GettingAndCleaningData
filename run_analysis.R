@@ -2,9 +2,9 @@
 url<-"https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 
 #Download the data files and extract the dataset files
-#download.file(url,"temp.zip",method="curl")
-#unzip("temp.zip",exdir = "./")
-#file.remove("temp.zip")
+download.file(url,"temp.zip",method="curl")
+unzip("temp.zip",exdir = "./")
+file.remove("temp.zip")
 
 #read all the neccesary files
 features<-read.table("UCI HAR Dataset/features.txt")
@@ -38,6 +38,7 @@ names(extracted) <- gsub("-std", "Std", names(extracted))
 names(extracted) <- gsub("-mean", "Mean", names(extracted))
 
 #Create a new tidy set with the means by subject and activity
+library(dplyr)
 tidy<-extracted %>%
     group_by(subject,activity) %>%
     summarise_each(funs(mean(., na.rm=TRUE)))
